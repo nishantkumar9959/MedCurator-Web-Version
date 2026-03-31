@@ -1,10 +1,10 @@
 {
-  "projectId": "gen-lang-client-0857211618",
-  "appId": "1:290164557401:web:9c5f08d7679549e0355348",
-  "apiKey": "AIzaSyBNeOOE9o8-EH-NGW4v7rHHnaEsUpLC5l4",
-  "authDomain": "gen-lang-client-0857211618.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-55ceeffd-138a-4521-b81c-6b7932f640b1",
-  "storageBucket": "gen-lang-client-0857211618.firebasestorage.app",
-  "messagingSenderId": "290164557401",
-  "measurementId": ""
+  "projectId": "medcurator-d90c3",
+  "appId": "1:905476153037:web:a635cb63c82ae8812ed384",
+  "apiKey": "AIzaSyCvWB64SPfzBi0RwswDSkqksWREIJEbLYU",
+  "authDomain": "medcurator-d90c3.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "medcurator-d90c3.firebasestorage.app",
+  "messagingSenderId": "905476153037",
+  "measurementId": "G-CREFJ42E9B"
 }

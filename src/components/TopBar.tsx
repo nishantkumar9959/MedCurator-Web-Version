@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Bell, Menu, BellOff } from 'lucide-react';
+import { Search, Bell, Menu, BellOff, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { db, auth, OperationType, handleFirestoreError } from '../firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 interface TopBarProps {
   isSidebarCollapsed: boolean;
@@ -10,6 +12,11 @@ interface TopBarProps {
 export function TopBar({ isSidebarCollapsed, setIsMobileMenuOpen }: TopBarProps) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isActive, setIsActive] = useState(true);
+  const [profile, setProfile] = useState({
+    displayName: "Dr. Nishant Kumar",
+    photoURL: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=100&h=100"
+  });
+  const [isLoading, setIsLoading] = useState(true);
   const notificationRef = useRef<HTMLDivElement>(null);
 
   const currentDate = new Date().toLocaleDateString('en-US', {
@@ -26,6 +33,29 @@ export function TopBar({ isSidebarCollapsed, setIsMobileMenuOpen }: TopBarProps)
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Fetch profile from Firestore
+  useEffect(() => {
+    if (!auth.currentUser) return;
+
+    const userDocRef = doc(db, 'users', auth.currentUser.uid);
+    
+    const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setProfile({
+          displayName: data.displayName || "Dr. Nishant Kumar",
+          photoURL: data.photoURL || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=100&h=100"
+        });
+      }
+      setIsLoading(false);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, `users/${auth.currentUser?.uid}`);
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -99,17 +129,29 @@ export function TopBar({ isSidebarCollapsed, setIsMobileMenuOpen }: TopBarProps)
         
         <div className="hidden md:block h-6 w-px bg-outline-variant"></div>
         
-        <div className="hidden md:block text-right">
+        <div className="hidden md:block text-right min-w-[120px]">
           <p className="font-body text-xs font-medium text-on-surface-variant">{currentDate}</p>
-          <p className="font-headline text-sm font-black text-on-surface">Dr. Nishant Kumar</p>
+          {isLoading ? (
+            <div className="flex justify-end">
+              <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+            </div>
+          ) : (
+            <p className="font-headline text-sm font-black text-on-surface truncate max-w-[150px]">{profile.displayName}</p>
+          )}
         </div>
         
-        <img 
-          alt="Dr. Nishant Kumar" 
-          className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover ring-2 ring-surface-container-lowest shadow-sm" 
-          src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=100&h=100"
-          referrerPolicy="no-referrer"
-        />
+        <div className="relative w-8 h-8 md:w-10 md:h-10">
+          {isLoading ? (
+            <div className="w-full h-full rounded-full bg-surface-container-high animate-pulse" />
+          ) : (
+            <img 
+              alt={profile.displayName} 
+              className="w-full h-full rounded-full object-cover ring-2 ring-surface-container-lowest shadow-sm" 
+              src={profile.photoURL}
+              referrerPolicy="no-referrer"
+            />
+          )}
+        </div>
       </div>
     </header>
   );

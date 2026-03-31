@@ -13,21 +13,54 @@ import {
   Save,
   Edit2,
   Moon,
+  Check,
   Sun,
-  Check
+  Loader2
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { db, auth, OperationType, handleFirestoreError } from '../firebase';
+import { doc, getDoc, setDoc, updateDoc, onSnapshot } from 'firebase/firestore';
 
 export function SettingsView() {
   const [isEditing, setIsEditing] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
-  const [profileImage, setProfileImage] = useState("https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=200&h=200");
+  const [isLoading, setIsLoading] = useState(true);
+  const [profile, setProfile] = useState({
+    displayName: "Dr. Nishant Kumar",
+    email: "nishant.k@medcurator.com",
+    photoURL: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=200&h=200",
+    specialization: "Chief Medical Officer",
+    phoneNumber: "+91 98765 43210",
+    hospitalName: "City General Hospital",
+    registrationId: "HOSP-2026-001",
+    address: "123 Healthcare Avenue, Medical District, New Delhi, 110001"
+  });
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize dark mode from document class
   useEffect(() => {
     setIsDarkMode(document.documentElement.classList.contains('dark'));
+  }, []);
+
+  // Fetch profile from Firestore
+  useEffect(() => {
+    if (!auth.currentUser) return;
+
+    const userDocRef = doc(db, 'users', auth.currentUser.uid);
+    
+    const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setProfile(prev => ({ ...prev, ...docSnap.data() }));
+      }
+      setIsLoading(false);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, `users/${auth.currentUser?.uid}`);
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const toggleDarkMode = () => {
@@ -50,10 +83,25 @@ export function SettingsView() {
     setNotifications(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    setShowSaveSuccess(true);
-    setTimeout(() => setShowSaveSuccess(false), 3000);
+  const handleSave = async () => {
+    if (!auth.currentUser) return;
+    
+    setIsLoading(true);
+    try {
+      const userDocRef = doc(db, 'users', auth.currentUser.uid);
+      await setDoc(userDocRef, {
+        ...profile,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+      
+      setIsEditing(false);
+      setShowSaveSuccess(true);
+      setTimeout(() => setShowSaveSuccess(false), 3000);
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, `users/${auth.currentUser.uid}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +109,7 @@ export function SettingsView() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result as string);
+        setProfile(prev => ({ ...prev, photoURL: reader.result as string }));
       };
       reader.readAsDataURL(file);
     }
@@ -70,6 +118,19 @@ export function SettingsView() {
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setProfile(prev => ({ ...prev, [name]: value }));
+  };
+
+  if (isLoading && !isEditing) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 pb-12">
@@ -100,9 +161,10 @@ export function SettingsView() {
           {isEditing ? (
             <button 
               onClick={handleSave}
-              className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
+              disabled={isLoading}
+              className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 w-full sm:w-auto disabled:opacity-50"
             >
-              <Save className="w-4 h-4" />
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Changes
             </button>
           ) : (
@@ -137,7 +199,7 @@ export function SettingsView() {
               <div className="relative group">
                 <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-surface-container-high shadow-inner">
                   <img 
-                    src={profileImage} 
+                    src={profile.photoURL} 
                     alt="Profile"
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
@@ -167,8 +229,10 @@ export function SettingsView() {
                   <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Full Name</label>
                   <input 
                     type="text" 
+                    name="displayName"
                     disabled={!isEditing}
-                    defaultValue="Dr. Nishant Kumar"
+                    value={profile.displayName}
+                    onChange={handleInputChange}
                     className={cn(
                       "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-on-surface font-medium",
                       isEditing ? "bg-surface-container-low" : "bg-transparent cursor-not-allowed opacity-80"
@@ -179,8 +243,10 @@ export function SettingsView() {
                   <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Email Address</label>
                   <input 
                     type="email" 
+                    name="email"
                     disabled={!isEditing}
-                    defaultValue="nishant.k@medcurator.com"
+                    value={profile.email}
+                    onChange={handleInputChange}
                     className={cn(
                       "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-on-surface font-medium",
                       isEditing ? "bg-surface-container-low" : "bg-transparent cursor-not-allowed opacity-80"
@@ -191,8 +257,10 @@ export function SettingsView() {
                   <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Specialization</label>
                   <input 
                     type="text" 
+                    name="specialization"
                     disabled={!isEditing}
-                    defaultValue="Chief Medical Officer"
+                    value={profile.specialization}
+                    onChange={handleInputChange}
                     className={cn(
                       "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-on-surface font-medium",
                       isEditing ? "bg-surface-container-low" : "bg-transparent cursor-not-allowed opacity-80"
@@ -203,8 +271,10 @@ export function SettingsView() {
                   <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Phone Number</label>
                   <input 
                     type="tel" 
+                    name="phoneNumber"
                     disabled={!isEditing}
-                    defaultValue="+91 98765 43210"
+                    value={profile.phoneNumber}
+                    onChange={handleInputChange}
                     className={cn(
                       "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-on-surface font-medium",
                       isEditing ? "bg-surface-container-low" : "bg-transparent cursor-not-allowed opacity-80"
@@ -228,8 +298,10 @@ export function SettingsView() {
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Hospital Name</label>
                 <input 
                   type="text" 
+                  name="hospitalName"
                   disabled={!isEditing}
-                  defaultValue="City General Hospital"
+                  value={profile.hospitalName}
+                  onChange={handleInputChange}
                   className={cn(
                     "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-on-surface font-medium",
                     isEditing ? "bg-surface-container-low" : "bg-transparent cursor-not-allowed opacity-80"
@@ -240,8 +312,10 @@ export function SettingsView() {
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Registration ID</label>
                 <input 
                   type="text" 
+                  name="registrationId"
                   disabled={!isEditing}
-                  defaultValue="HOSP-2026-001"
+                  value={profile.registrationId}
+                  onChange={handleInputChange}
                   className={cn(
                     "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-on-surface font-medium",
                     isEditing ? "bg-surface-container-low" : "bg-transparent cursor-not-allowed opacity-80"
@@ -252,8 +326,10 @@ export function SettingsView() {
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Address</label>
                 <textarea 
                   rows={3}
+                  name="address"
                   disabled={!isEditing}
-                  defaultValue="123 Healthcare Avenue, Medical District, New Delhi, 110001"
+                  value={profile.address}
+                  onChange={handleInputChange}
                   className={cn(
                     "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-on-surface font-medium resize-none",
                     isEditing ? "bg-surface-container-low" : "bg-transparent cursor-not-allowed opacity-80"

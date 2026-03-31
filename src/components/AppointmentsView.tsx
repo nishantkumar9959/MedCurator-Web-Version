@@ -118,15 +118,15 @@ export function AppointmentsView({
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-end"
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4"
       >
         <div>
-          <h2 className="font-headline text-3xl font-extrabold text-on-surface tracking-tight">Appointments</h2>
-          <p className="text-on-surface-variant mt-1">Manage and schedule patient appointments.</p>
+          <h2 className="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">Appointments</h2>
+          <p className="text-on-surface-variant mt-1 text-sm sm:text-base">Manage and schedule patient appointments.</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+          className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           New Appointment
@@ -278,7 +278,7 @@ export function AppointmentsView({
                 </button>
               </div>
               
-              <form onSubmit={handleCreateAppointment} className="p-8 space-y-6">
+              <form onSubmit={handleCreateAppointment} className="p-6 sm:p-8 space-y-6">
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Select Patient</label>
                   <input 
@@ -290,7 +290,7 @@ export function AppointmentsView({
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Select Doctor</label>
                     <select 
@@ -316,7 +316,7 @@ export function AppointmentsView({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Date</label>
                     <input 
@@ -345,17 +345,17 @@ export function AppointmentsView({
                   </div>
                 </div>
 
-                <div className="pt-4 flex gap-3">
+                <div className="pt-4 flex flex-col sm:flex-row gap-3">
                   <button 
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="flex-1 px-6 py-3 bg-surface-container-high text-on-surface font-bold rounded-xl hover:bg-surface-container-highest transition-all"
+                    className="w-full sm:flex-1 px-6 py-3 bg-surface-container-high text-on-surface font-bold rounded-xl hover:bg-surface-container-highest transition-all"
                   >
                     Cancel
                   </button>
                   <button 
                     type="submit"
-                    className="flex-1 px-6 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                    className="w-full sm:flex-1 px-6 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
                   >
                     Schedule Appointment
                   </button>

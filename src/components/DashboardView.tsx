@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { LucideIcon, Users, CalendarCheck, Clock, BedDouble, Download } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { LucideIcon, Users, CalendarCheck, Clock, BedDouble, Download, Loader2, Check } from 'lucide-react';
 import { motion } from 'motion/react';
+import { toPng } from 'html-to-image';
+import { jsPDF } from 'jspdf';
 import { StatCard } from './StatCard';
 import { InflowChart } from './InflowChart';
 import { RevenueChart } from './RevenueChart';
@@ -64,6 +66,42 @@ export function DashboardView() {
   const [admissionsSearch, setAdmissionsSearch] = useState('');
   const [patients, setPatients] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [reportGenerated, setReportGenerated] = useState(false);
+  const dashboardRef = useRef<HTMLDivElement>(null);
+
+  const handleGenerateReport = async () => {
+    if (!dashboardRef.current) return;
+    
+    setIsGenerating(true);
+    try {
+      // Small delay to ensure any UI updates are rendered
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const imgData = await toPng(dashboardRef.current, {
+        quality: 1,
+        pixelRatio: 2,
+        backgroundColor: '#f8fafc' // Match slate-50 background
+      });
+      
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      
+      // Calculate height based on aspect ratio of the dashboard
+      const dashboardElement = dashboardRef.current;
+      const pdfHeight = (dashboardElement.offsetHeight * pdfWidth) / dashboardElement.offsetWidth;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('MedCurator_Operational_Report.pdf');
+      
+      setReportGenerated(true);
+      setTimeout(() => setReportGenerated(false), 1500);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   useEffect(() => {
     const q = query(collection(db, 'patients'), orderBy('registrationDate', 'desc'));
@@ -114,23 +152,42 @@ export function DashboardView() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" ref={dashboardRef}>
       {/* Header Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-end"
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4"
       >
         <div>
-          <h2 className="font-headline text-3xl font-extrabold text-on-surface tracking-tight">Operational Analytics</h2>
-          <p className="text-on-surface-variant mt-1">Real-time clinical performance and patient inflow overview.</p>
+          <h2 className="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">Operational Analytics</h2>
+          <p className="text-on-surface-variant mt-1 text-sm sm:text-base">Real-time clinical performance and patient inflow overview.</p>
         </div>
         <button 
-          onClick={() => alert('Generating full operational report...')}
-          className="px-6 py-2.5 bg-gradient-to-br from-primary to-primary-container text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+          onClick={handleGenerateReport}
+          disabled={isGenerating || reportGenerated}
+          className={`px-4 py-2 text-sm text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed w-full sm:w-40 justify-center ${
+            reportGenerated 
+              ? 'bg-emerald-500 hover:bg-emerald-600' 
+              : 'bg-gradient-to-br from-primary to-primary-container'
+          }`}
         >
-          <Download className="w-4 h-4" />
-          Generate Report
+          {isGenerating ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Generating...
+            </>
+          ) : reportGenerated ? (
+            <>
+              <Check className="w-4 h-4" />
+              PDF Saved
+            </>
+          ) : (
+            <>
+              <Download className="w-4 h-4" />
+              Generate Report
+            </>
+          )}
         </button>
       </motion.div>
 

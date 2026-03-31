@@ -186,15 +186,15 @@ export function BillingView() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-end"
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4"
       >
         <div>
-          <h2 className="font-headline text-3xl font-extrabold text-on-surface tracking-tight">Billing & Invoices</h2>
-          <p className="text-on-surface-variant mt-1">Manage patient billing, payments, and financial records.</p>
+          <h2 className="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">Billing & Invoices</h2>
+          <p className="text-on-surface-variant mt-1 text-sm sm:text-base">Manage patient billing, payments, and financial records.</p>
         </div>
         <button 
           onClick={() => setIsCreateModalOpen(true)}
-          className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+          className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Create Invoice
@@ -367,7 +367,7 @@ export function BillingView() {
                 </button>
               </div>
               <form onSubmit={handleCreateInvoice} className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Patient Name</label>
                     <input 
@@ -404,8 +404,8 @@ export function BillingView() {
                   
                   <div className="space-y-3">
                     {newInvoice.lineItems.map((item, index) => (
-                      <div key={index} className="grid grid-cols-12 gap-3 items-end bg-surface-container-low p-3 rounded-xl border border-outline-variant/10">
-                        <div className="col-span-6 space-y-1">
+                      <div key={index} className="flex flex-col sm:grid sm:grid-cols-12 gap-3 items-end bg-surface-container-low p-3 rounded-xl border border-outline-variant/10">
+                        <div className="w-full sm:col-span-6 space-y-1">
                           <label className="text-[8px] font-bold text-on-surface-variant uppercase tracking-widest">Description</label>
                           <input 
                             required
@@ -415,7 +415,7 @@ export function BillingView() {
                             onChange={(e) => handleLineItemChange(index, 'description', e.target.value)}
                           />
                         </div>
-                        <div className="col-span-2 space-y-1">
+                        <div className="w-full sm:col-span-2 space-y-1">
                           <label className="text-[8px] font-bold text-on-surface-variant uppercase tracking-widest">Qty</label>
                           <input 
                             required
@@ -426,7 +426,7 @@ export function BillingView() {
                             onChange={(e) => handleLineItemChange(index, 'quantity', parseInt(e.target.value) || 0)}
                           />
                         </div>
-                        <div className="col-span-3 space-y-1">
+                        <div className="w-full sm:col-span-3 space-y-1">
                           <label className="text-[8px] font-bold text-on-surface-variant uppercase tracking-widest">Price (₹)</label>
                           <input 
                             required
@@ -437,7 +437,7 @@ export function BillingView() {
                             onChange={(e) => handleLineItemChange(index, 'price', parseInt(e.target.value) || 0)}
                           />
                         </div>
-                        <div className="col-span-1 flex justify-center pb-2">
+                        <div className="w-full sm:col-span-1 flex justify-end sm:justify-center pb-2">
                           <button 
                             type="button"
                             onClick={() => handleRemoveLineItem(index)}
@@ -457,21 +457,21 @@ export function BillingView() {
                     <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Total Amount</p>
                     <h4 className="text-2xl font-headline font-black text-on-surface">{formatCurrency(calculateTotal(newInvoice.lineItems))}</h4>
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto mt-4 md:mt-0">
                     <button 
                       type="button"
                       onClick={() => {
                         setNewInvoice({...newInvoice, status: 'Draft'});
                         // Trigger submit manually or just use a flag
                       }}
-                      className="px-6 py-2.5 bg-surface-container-high text-on-surface font-bold rounded-xl hover:bg-surface-container-highest transition-all"
+                      className="w-full sm:w-auto px-6 py-2.5 bg-surface-container-high text-on-surface font-bold rounded-xl hover:bg-surface-container-highest transition-all"
                     >
                       Save as Draft
                     </button>
                     <button 
                       type="submit"
                       onClick={() => setNewInvoice({...newInvoice, status: 'Pending'})}
-                      className="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2"
+                      className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
                     >
                       <Save className="w-4 h-4" />
                       Create Invoice
@@ -511,12 +511,12 @@ export function BillingView() {
                 </button>
               </div>
               <div className="p-6 space-y-6">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Patient</p>
                     <p className="font-bold text-on-surface">{selectedInvoice.patientName}</p>
                   </div>
-                  <div className="text-right">
+                  <div className="sm:text-right">
                     <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Date</p>
                     <p className="font-bold text-on-surface">{selectedInvoice.date}</p>
                   </div>
@@ -546,18 +546,18 @@ export function BillingView() {
                   </div>
                 </div>
 
-                <div className="flex justify-between items-center pt-4 border-t border-outline-variant/20">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pt-4 border-t border-outline-variant/20 gap-4">
                   <div>
                     <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Status</p>
                     <span className={cn(
-                      "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                      "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block mt-1",
                       selectedInvoice.status === 'Paid' ? "bg-emerald-50 text-emerald-700" : 
                       selectedInvoice.status === 'Pending' ? "bg-orange-50 text-orange-700" : "bg-slate-100 text-slate-600"
                     )}>
                       {selectedInvoice.status}
                     </span>
                   </div>
-                  <div className="text-right">
+                  <div className="sm:text-right">
                     <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Grand Total</p>
                     <p className="text-2xl font-headline font-black text-on-surface">{formatCurrency(calculateTotal(selectedInvoice.lineItems))}</p>
                   </div>
@@ -600,7 +600,7 @@ export function BillingView() {
 
                 <div className="space-y-3">
                   <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest text-center">Select Payment Method</p>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {['Cash', 'Credit Card', 'UPI', 'Net Banking'].map((method) => (
                       <button 
                         key={method}

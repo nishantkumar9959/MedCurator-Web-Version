@@ -73,27 +73,27 @@ export function RegistrationView({ setActiveTab, setTriggerNewAppointment }: Reg
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-end"
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4"
       >
         <div>
-          <h2 className="font-headline text-3xl font-extrabold text-on-surface tracking-tight">Patient Registration</h2>
-          <p className="text-on-surface-variant mt-1">Register new patients into the clinical system.</p>
+          <h2 className="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">Patient Registration</h2>
+          <p className="text-on-surface-variant mt-1 text-sm sm:text-base">Register new patients into the clinical system.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 w-full sm:w-auto">
           <AnimatePresence mode="wait">
             {isSaved ? (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-3"
+                className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-auto"
               >
-                <div className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 rounded-xl font-bold text-sm">
+                <div className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 rounded-xl font-bold text-sm w-full sm:w-auto justify-center">
                   <CheckCircle className="w-4 h-4" />
                   Patient Registered
                 </div>
                 <button 
                   onClick={handleAddAppointment}
-                  className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+                  className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   <Plus className="w-4 h-4" />
                   Add Appointment
@@ -103,7 +103,7 @@ export function RegistrationView({ setActiveTab, setTriggerNewAppointment }: Reg
               <button 
                 onClick={handleSavePatient}
                 disabled={isSaving}
-                className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 {isSaving ? 'Saving...' : 'Save Patient'}

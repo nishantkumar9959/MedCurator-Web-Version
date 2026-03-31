@@ -21,8 +21,8 @@ export function RevenueChart({ data }: RevenueChartProps) {
   };
 
   return (
-    <div className="bg-surface-container-lowest p-8 rounded-xl shadow-[0px_4px_24px_rgba(0,0,0,0.02)] border border-outline-variant/30 flex flex-col">
-      <div className="mb-8">
+    <div className="bg-surface-container-lowest p-6 sm:p-8 rounded-xl shadow-[0px_4px_24px_rgba(0,0,0,0.02)] border border-outline-variant/30 flex flex-col">
+      <div className="mb-6 sm:mb-8">
         <h4 className="font-headline text-xl font-bold text-on-surface">Department Revenue</h4>
         <p className="text-xs text-on-surface-variant mt-1">Current Quarter Performance</p>
       </div>

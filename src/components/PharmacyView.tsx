@@ -84,15 +84,15 @@ export function PharmacyView() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-end"
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4"
       >
         <div>
-          <h2 className="font-headline text-3xl font-extrabold text-on-surface tracking-tight">Pharmacy</h2>
-          <p className="text-on-surface-variant mt-1">Manage medication inventory and prescriptions.</p>
+          <h2 className="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">Pharmacy</h2>
+          <p className="text-on-surface-variant mt-1 text-sm sm:text-base">Manage medication inventory and prescriptions.</p>
         </div>
         <button 
           onClick={() => setIsAddModalOpen(true)}
-          className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+          className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Add Medication
@@ -246,7 +246,7 @@ export function PharmacyView() {
                     onChange={(e) => setNewMed({...newMed, name: e.target.value})}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Dosage</label>
                     <input 
@@ -342,7 +342,7 @@ export function PharmacyView() {
                       <Plus className="w-5 h-5" />
                     </button>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <button 
                       onClick={() => handleUpdateStock(selectedMed.id, selectedMed.stock + 50)}
                       className="py-2.5 bg-surface-container-high text-on-surface font-bold text-xs rounded-xl hover:bg-surface-container-highest transition-all"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sidebar, TabType } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
 import { DashboardView } from './components/DashboardView';
@@ -10,6 +10,9 @@ import { SettingsView } from './components/SettingsView';
 import { AnimatePresence, motion } from 'motion/react';
 import { AIAssistant } from './components/AIAssistant';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { Login } from './components/Login';
+import { auth } from './firebase';
+import { onAuthStateChanged, User } from 'firebase/auth';
 
 export interface Appointment {
   id: string;
@@ -23,6 +26,10 @@ export interface Appointment {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Dashboard');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
   const [appointments, setAppointments] = useState<Appointment[]>([
     { id: 'APT-101', patient: 'Rajesh Kumar', doctor: 'Dr. Nishant Kumar', time: '10:00 AM', date: new Date().toISOString().split('T')[0], type: 'In-Person', status: 'Confirmed' },
     { id: 'APT-102', patient: 'Anita Sharma', doctor: 'Dr. Sarah Khan', time: '11:30 AM', date: new Date().toISOString().split('T')[0], type: 'Tele-health', status: 'Pending' },
@@ -30,6 +37,14 @@ export default function App() {
     { id: 'APT-104', patient: 'Suresh Raina', doctor: 'Dr. Amit Shah', time: '09:00 AM', date: new Date(Date.now() + 86400000).toISOString().split('T')[0], type: 'In-Person', status: 'Confirmed' },
   ]);
   const [triggerNewAppointment, setTriggerNewAppointment] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setIsAuthReady(true);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const renderView = () => {
     switch (activeTab) {
@@ -58,12 +73,34 @@ export default function App() {
     }
   };
 
+  if (!isAuthReady) {
+    return (
+      <div className="min-h-screen bg-surface-container-lowest flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login />;
+  }
+
   return (
     <div className="min-h-screen bg-surface">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-      <TopBar />
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
+      <TopBar 
+        isSidebarCollapsed={isSidebarCollapsed} 
+        setIsMobileMenuOpen={setIsMobileMenuOpen} 
+      />
       
-      <main className="ml-64 pt-16 min-h-screen bg-surface-container-low p-8">
+      <main className={`pt-20 md:pt-16 min-h-screen bg-surface-container-low p-4 sm:p-6 md:p-8 transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-20' : 'md:ml-64'}`}>
         <ErrorBoundary>
           <AnimatePresence mode="wait">
             <motion.div

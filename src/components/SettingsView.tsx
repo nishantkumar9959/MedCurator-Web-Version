@@ -76,20 +76,20 @@ export function SettingsView() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-end"
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4"
       >
         <div>
-          <h2 className="font-headline text-3xl font-extrabold text-on-surface tracking-tight">Settings</h2>
-          <p className="text-on-surface-variant mt-1">Manage your account and system preferences.</p>
+          <h2 className="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">Settings</h2>
+          <p className="text-on-surface-variant mt-1 text-sm sm:text-base">Manage your account and system preferences.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <AnimatePresence mode="wait">
             {showSaveSuccess && (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 rounded-xl font-bold text-sm"
+                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 rounded-xl font-bold text-sm"
               >
                 <Check className="w-4 h-4" />
                 Changes Saved
@@ -100,7 +100,7 @@ export function SettingsView() {
           {isEditing ? (
             <button 
               onClick={handleSave}
-              className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+              className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
             >
               <Save className="w-4 h-4" />
               Save Changes
@@ -108,7 +108,7 @@ export function SettingsView() {
           ) : (
             <button 
               onClick={() => setIsEditing(true)}
-              className="px-6 py-2.5 bg-surface-container-high text-on-surface font-semibold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2"
+              className="px-6 py-2.5 bg-surface-container-high text-on-surface font-semibold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
             >
               <Edit2 className="w-4 h-4" />
               Edit Profile

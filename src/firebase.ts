@@ -4,7 +4,7 @@ import { getAuth } from "firebase/auth";
 
 // Your exact keys from the Firebase console
 const firebaseConfig = {
-  apiKey: "AIzaSyCVwB64SPfzBi0RwswDSkqksWREIJebLYU",
+  apiKey: "AIzaSyCvWB64SPfzBi0RwswDSkqksWREIJEbLYU",
   authDomain: "medcurator-d90c3.firebaseapp.com",
   projectId: "medcurator-d90c3",
   storageBucket: "medcurator-d90c3.firebasestorage.app",

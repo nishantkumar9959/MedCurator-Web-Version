@@ -90,7 +90,7 @@ export function AIAssistant() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 w-96 h-[500px] bg-surface-container-lowest rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-outline-variant flex flex-col z-50 overflow-hidden"
+            className="fixed bottom-24 right-6 w-[calc(100vw-3rem)] sm:w-96 h-[500px] max-h-[calc(100vh-8rem)] bg-surface-container-lowest rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-outline-variant flex flex-col z-50 overflow-hidden"
           >
             {/* Header */}
             <div className="p-4 bg-primary text-white flex justify-between items-center">

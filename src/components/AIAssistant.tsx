@@ -37,8 +37,14 @@ export function AIAssistant() {
 
     // 2. Wrap the API call in a robust try...catch...finally block
     try {
+      const apiKey = process.env.GEMINI_API_KEY;
+      
+      if (!apiKey || apiKey === 'undefined' || apiKey === 'MY_GEMINI_API_KEY') {
+        throw new Error("Missing Gemini API Key. Please configure GEMINI_API_KEY in your environment variables.");
+      }
+
       // Initialize the Gemini API
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
       
       const model = "gemini-3-flash-preview";
       
@@ -56,14 +62,18 @@ export function AIAssistant() {
       if (aiResponse) {
         setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
       }
-    } catch (error) {
+    } catch (error: any) {
       // 3. Log the exact error to the console for debugging
       console.error("Gemini API Error:", error);
       
+      const errorMessage = error?.message?.includes("API Key") 
+        ? "⚠️ API Key missing or invalid. Please configure GEMINI_API_KEY in Vercel environment variables and redeploy."
+        : "⚠️ Connection error. Please check the console to verify the API key and network status.";
+
       // 4. Push a graceful fallback error message to the chat history
       setMessages(prev => [
         ...prev, 
-        { role: 'assistant', content: "⚠️ Connection error. Please check the console to verify the API key and network status." }
+        { role: 'assistant', content: errorMessage }
       ]);
     } finally {
       // 5. ALWAYS execute setIsLoading(false) in the finally block to prevent UI freezes

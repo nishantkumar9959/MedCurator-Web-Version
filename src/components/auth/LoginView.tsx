@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth } from '../../firebase';
 import { Loader2, Lock, Mail, User as UserIcon } from 'lucide-react';
 
-export function Login() {
+export function LoginView() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -56,7 +56,7 @@ export function Login() {
   const medicalPattern = `data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23cbd5e1' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M 15 30 h 10 l 5 -15 l 10 30 l 5 -15 h 10' /%3E%3Cpath d='M 80 30 v 10 c 0 2.8 4.5 5 10 5 s 10 -2.2 10 -5 v -10' /%3E%3Cpath d='M 80 40 v 10 c 0 2.8 4.5 5 10 5 s 10 -2.2 10 -5 v -10' /%3E%3Cellipse cx='90' cy='30' rx='10' ry='4' /%3E%3Cpath d='M 30 90 h 8 v -8 h 8 v 8 h 8 v 8 h -8 v 8 h -8 v -8 h -8 z' /%3E%3Ccircle cx='90' cy='90' r='12' /%3E%3Cpath d='M 90 90 l 5 -5' /%3E%3C/g%3E%3C/svg%3E`;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 relative overflow-y-auto">
       {/* Background Pattern */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none" 
@@ -67,14 +67,14 @@ export function Login() {
         }}
       />
       
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-[0px_12px_32px_rgba(25,28,29,0.06)] overflow-hidden border border-slate-200 relative z-10">
-        <div className="bg-blue-600 p-8 text-center">
-          <h1 className="text-3xl font-bold text-white tracking-widest font-headline">MedCurator</h1>
-          <p className="text-blue-100 mt-2 text-sm font-medium">Clinical Systems Portal</p>
+      <div className="max-w-[400px] w-full bg-white rounded-3xl shadow-[0px_12px_32px_rgba(25,28,29,0.06)] overflow-hidden border border-slate-200 relative z-10">
+        <div className="bg-blue-600 p-6 text-center">
+          <h1 className="text-2xl font-bold text-white tracking-widest font-headline">MedCurator</h1>
+          <p className="text-blue-100 mt-1 text-xs font-medium">Clinical Systems Portal</p>
         </div>
         
-        <div className="p-8">
-          <h2 className="text-xl font-bold text-on-surface mb-6 font-headline">
+        <div className="p-6">
+          <h2 className="text-lg font-bold text-on-surface mb-4 font-headline">
             {isSignUp ? 'Create an Account' : 'Sign In to Continue'}
           </h2>
           
@@ -84,7 +84,7 @@ export function Login() {
             </div>
           )}
 
-          <form onSubmit={handleAuth} className="space-y-5">
+          <form onSubmit={handleAuth} className="space-y-4">
             {isSignUp && (
               <div>
                 <label className="block text-sm font-semibold text-on-surface-variant mb-2">
@@ -155,7 +155,7 @@ export function Login() {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-4 text-center">
             <button
               type="button"
               onClick={() => {
@@ -171,6 +171,10 @@ export function Login() {
           </div>
         </div>
       </div>
+      <footer className="mt-8 w-full flex flex-col items-center gap-1.5 text-center text-sm font-medium tracking-wide text-slate-500 z-10 pb-4">
+        <span>&copy; 2026 MedCurator.</span>
+        <span>Engineered in India 🇮🇳 | Developed by Nishant Kumar</span>
+      </footer>
     </div>
   );
 }

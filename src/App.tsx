@@ -10,7 +10,7 @@ import { SettingsView } from './components/SettingsView';
 import { AnimatePresence, motion } from 'motion/react';
 import { AIAssistant } from './components/AIAssistant';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { Login } from './components/Login';
+import { LoginView } from './components/auth/LoginView';
 import { auth } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 
@@ -82,7 +82,7 @@ export default function App() {
   }
 
   if (!user) {
-    return <Login />;
+    return <LoginView />;
   }
 
   return (

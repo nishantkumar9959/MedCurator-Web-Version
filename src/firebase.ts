@@ -4,13 +4,13 @@ import { getAuth } from "firebase/auth";
 
 // Your exact keys from the Firebase console
 const firebaseConfig = {
-  apiKey: "AIzaSyCvWB64SPfzBi0RwswDSkqksWREIJEbLYU",
-  authDomain: "medcurator-d90c3.firebaseapp.com",
-  projectId: "medcurator-d90c3",
-  storageBucket: "medcurator-d90c3.firebasestorage.app",
-  messagingSenderId: "905476153037",
-  appId: "1:905476153037:web:a635cb63c82ae8812ed384",
-  measurementId: "G-CREFJ42E9D"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyCvWB64SPfzBi0RwswDSkqksWREIJEbLYU",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "medcurator-d90c3.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "medcurator-d90c3",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "medcurator-d90c3.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "905476153037",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:905476153037:web:a635cb63c82ae8812ed384",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-CREFJ42E9D"
 };
 
 // Initialize the Firebase connection

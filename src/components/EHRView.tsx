@@ -114,17 +114,19 @@ export function EHRView() {
   const selectedPatient = mockPatients.find(p => p.id === selectedPatientId) || mockPatients[0];
 
   return (
-    <div className="p-4 md:p-8 pt-24 max-w-7xl mx-auto h-screen flex flex-col">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 shrink-0">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-on-surface font-headline tracking-tight">Electronic Health Records</h2>
-          <p className="text-on-surface-variant mt-1 font-medium">Comprehensive patient history and vitals tracking</p>
+    <div className="flex flex-col h-[calc(100vh-6rem)] -mx-4 sm:-mx-6 md:-mx-8 -mb-4 sm:-mb-6 md:-mb-8">
+      <div className="px-4 sm:px-6 md:px-8 pt-4 md:pt-6 pb-4 shrink-0">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-on-surface font-headline tracking-tight">Electronic Health Records</h2>
+            <p className="text-on-surface-variant mt-1 font-medium text-sm sm:text-base">Comprehensive patient history and vitals tracking</p>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
+      <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
         {/* Left Sidebar: Patient List */}
-        <div className="w-full lg:w-80 flex flex-col gap-4 shrink-0 h-[300px] lg:h-full">
+        <div className="w-full lg:w-80 flex flex-col gap-4 shrink-0 h-[250px] lg:h-full">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
             <input 

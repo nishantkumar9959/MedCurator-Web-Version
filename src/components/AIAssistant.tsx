@@ -88,7 +88,7 @@ export function AIAssistant() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center z-50 hover:bg-primary-container transition-colors"
+        className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center z-50 hover:bg-primary-container transition-colors"
       >
         {isOpen ? <X className="w-6 h-6" /> : <MessageSquare className="w-6 h-6" />}
       </motion.button>
@@ -100,7 +100,7 @@ export function AIAssistant() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 w-[calc(100vw-3rem)] sm:w-96 h-[500px] max-h-[calc(100vh-8rem)] bg-surface-container-lowest rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-outline-variant flex flex-col z-50 overflow-hidden"
+            className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-96 h-[500px] max-h-[calc(100vh-6rem)] sm:max-h-[calc(100vh-8rem)] bg-surface-container-lowest rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-outline-variant flex flex-col z-50 overflow-hidden"
           >
             {/* Header */}
             <div className="p-4 bg-primary text-white flex justify-between items-center">

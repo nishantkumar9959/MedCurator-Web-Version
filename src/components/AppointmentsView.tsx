@@ -210,31 +210,31 @@ export function AppointmentsView({
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   key={apt.id} 
-                  className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_24px_rgba(0,0,0,0.02)] flex items-center justify-between group hover:shadow-md transition-all"
+                  className="bg-surface-container-lowest p-4 sm:p-6 rounded-xl shadow-[0px_4px_24px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 group hover:shadow-md transition-all"
                 >
-                  <div className="flex items-center gap-6">
-                    <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-                      {apt.type === 'Tele-health' ? <Video className="w-6 h-6" /> : <UserCheck className="w-6 h-6" />}
+                  <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 shrink-0 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                      {apt.type === 'Tele-health' ? <Video className="w-5 h-5 sm:w-6 sm:h-6" /> : <UserCheck className="w-5 h-5 sm:w-6 sm:h-6" />}
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-headline font-bold text-on-surface">{apt.patient}</h4>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h4 className="font-headline font-bold text-on-surface truncate">{apt.patient}</h4>
                         <span className={cn(
-                          "text-[10px] font-bold px-2 py-0.5 rounded-full uppercase",
+                          "text-[10px] font-bold px-2 py-0.5 rounded-full uppercase shrink-0",
                           apt.status === 'Confirmed' ? "bg-emerald-50 text-emerald-700" : "bg-orange-50 text-orange-700"
                         )}>
                           {apt.status}
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 mt-1 text-xs text-on-surface-variant">
-                        <span className="flex items-center gap-1"><User className="w-3 h-3" /> {apt.doctor}</span>
-                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {apt.time}</span>
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-on-surface-variant">
+                        <span className="flex items-center gap-1 whitespace-nowrap"><User className="w-3 h-3" /> {apt.doctor}</span>
+                        <span className="flex items-center gap-1 whitespace-nowrap"><Clock className="w-3 h-3" /> {apt.time}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <button className="px-4 py-2 text-xs font-bold text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">Reschedule</button>
-                    <button className="px-4 py-2 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors">Cancel</button>
+                  <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end border-t sm:border-t-0 border-outline-variant/20 pt-3 sm:pt-0">
+                    <button className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-center">Reschedule</button>
+                    <button className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-center">Cancel</button>
                   </div>
                 </motion.div>
               ))

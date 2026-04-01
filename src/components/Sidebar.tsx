@@ -10,18 +10,20 @@ import {
   ChevronLeft,
   ChevronRight,
   Activity,
-  X
+  X,
+  ClipboardList
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 
-export type TabType = 'Dashboard' | 'Registration' | 'Appointments' | 'Pharmacy' | 'Billing' | 'Settings';
+export type TabType = 'Dashboard' | 'Registration' | 'Appointments' | 'EHR' | 'Pharmacy' | 'Billing' | 'Settings';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard' as TabType },
   { icon: UserPlus, label: 'Registration' as TabType },
   { icon: Calendar, label: 'Appointments' as TabType },
+  { icon: ClipboardList, label: 'EHR' as TabType },
   { icon: Pill, label: 'Pharmacy' as TabType },
   { icon: CreditCard, label: 'Billing' as TabType },
 ];

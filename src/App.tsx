@@ -7,6 +7,7 @@ import { AppointmentsView } from './components/AppointmentsView';
 import { PharmacyView } from './components/PharmacyView';
 import { BillingView } from './components/BillingView';
 import { SettingsView } from './components/SettingsView';
+import { EHRView } from './components/EHRView';
 import { AnimatePresence, motion } from 'motion/react';
 import { AIAssistant } from './components/AIAssistant';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -66,6 +67,8 @@ export default function App() {
           triggerNewAppointment={triggerNewAppointment}
           setTriggerNewAppointment={setTriggerNewAppointment}
         />;
+      case 'EHR':
+        return <EHRView />;
       case 'Pharmacy':
         return <PharmacyView />;
       case 'Billing':

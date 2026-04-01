@@ -18,7 +18,7 @@ export function AppointmentsView({
   appointments, 
   setAppointments, 
   triggerNewAppointment, 
-  setTriggerNewAppointment 
+  setTriggerNewAppointment
 }: AppointmentsViewProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterType>('All Appointments');

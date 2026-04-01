@@ -30,21 +30,25 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
-  const [appointments, setAppointments] = useState<Appointment[]>([
-    { id: 'APT-101', patient: 'Rajesh Kumar', doctor: 'Dr. Nishant Kumar', time: '10:00 AM', date: new Date().toISOString().split('T')[0], type: 'In-Person', status: 'Confirmed' },
-    { id: 'APT-102', patient: 'Anita Sharma', doctor: 'Dr. Sarah Khan', time: '11:30 AM', date: new Date().toISOString().split('T')[0], type: 'Tele-health', status: 'Pending' },
-    { id: 'APT-103', patient: 'Priya Das', doctor: 'Dr. Nishant Kumar', time: '02:00 PM', date: new Date().toISOString().split('T')[0], type: 'In-Person', status: 'Confirmed' },
-    { id: 'APT-104', patient: 'Suresh Raina', doctor: 'Dr. Amit Shah', time: '09:00 AM', date: new Date(Date.now() + 86400000).toISOString().split('T')[0], type: 'In-Person', status: 'Confirmed' },
-  ]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [triggerNewAppointment, setTriggerNewAppointment] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setIsAuthReady(true);
+      if (currentUser && appointments.length === 0) {
+        const defaultName = currentUser.displayName || currentUser.email?.split('@')[0] || "Dr. Nishant Kumar";
+        setAppointments([
+          { id: 'APT-101', patient: 'Rajesh Kumar', doctor: defaultName, time: '10:00 AM', date: new Date().toISOString().split('T')[0], type: 'In-Person', status: 'Confirmed' },
+          { id: 'APT-102', patient: 'Anita Sharma', doctor: 'Dr. Sarah Khan', time: '11:30 AM', date: new Date().toISOString().split('T')[0], type: 'Tele-health', status: 'Pending' },
+          { id: 'APT-103', patient: 'Priya Das', doctor: defaultName, time: '02:00 PM', date: new Date().toISOString().split('T')[0], type: 'In-Person', status: 'Confirmed' },
+          { id: 'APT-104', patient: 'Suresh Raina', doctor: 'Dr. Amit Shah', time: '09:00 AM', date: new Date(Date.now() + 86400000).toISOString().split('T')[0], type: 'In-Person', status: 'Confirmed' },
+        ]);
+      }
     });
     return () => unsubscribe();
-  }, []);
+  }, [appointments.length]);
 
   const renderView = () => {
     switch (activeTab) {

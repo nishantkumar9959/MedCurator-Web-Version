@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Calendar as CalendarIcon, Plus, Clock, User, UserCheck, Video, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { auth } from '../firebase';
 import { Appointment } from '../App';
 
 interface AppointmentsViewProps {
@@ -24,10 +25,13 @@ export function AppointmentsView({
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
+  const currentUser = auth.currentUser;
+  const defaultDoctorName = currentUser?.displayName || currentUser?.email?.split('@')[0] || "Dr. Nishant Kumar";
+
   // Form state for new appointment
   const [newAppt, setNewAppt] = useState({
     patient: '',
-    doctor: 'Dr. Nishant Kumar',
+    doctor: defaultDoctorName,
     time: '10:00 AM',
     date: new Date().toISOString().split('T')[0],
     type: 'In-Person' as 'In-Person' | 'Tele-health'
@@ -67,7 +71,7 @@ export function AppointmentsView({
     // Reset form
     setNewAppt({
       patient: '',
-      doctor: 'Dr. Nishant Kumar',
+      doctor: defaultDoctorName,
       time: '10:00 AM',
       date: new Date().toISOString().split('T')[0],
       type: 'In-Person'
@@ -298,7 +302,7 @@ export function AppointmentsView({
                       value={newAppt.doctor}
                       onChange={(e) => setNewAppt({ ...newAppt, doctor: e.target.value })}
                     >
-                      <option>Dr. Nishant Kumar</option>
+                      <option>{defaultDoctorName}</option>
                       <option>Dr. Sarah Khan</option>
                       <option>Dr. Amit Shah</option>
                     </select>

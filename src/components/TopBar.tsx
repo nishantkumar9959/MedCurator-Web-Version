@@ -12,9 +12,13 @@ interface TopBarProps {
 export function TopBar({ isSidebarCollapsed, setIsMobileMenuOpen }: TopBarProps) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isActive, setIsActive] = useState(true);
+  const currentUser = auth.currentUser;
+  const defaultName = currentUser?.displayName || currentUser?.email?.split('@')[0] || "User";
+  const defaultPhoto = currentUser?.photoURL || "data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23E0E0E0'/%3E%3Cpath d='M50 48C59.3888 48 67 40.3888 67 31C67 21.6112 59.3888 14 50 14C40.6112 14 33 21.6112 33 31C33 40.3888 40.6112 48 50 48ZM50 55C33.3333 55 0 63.3333 0 80V100H100V80C100 63.3333 66.6667 55 50 55Z' fill='%23FFFFFF'/%3E%3C/svg%3E";
+
   const [profile, setProfile] = useState({
-    displayName: "Dr. Nishant Kumar",
-    photoURL: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=100&h=100"
+    displayName: defaultName,
+    photoURL: defaultPhoto
   });
   const [isLoading, setIsLoading] = useState(true);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -37,26 +41,35 @@ export function TopBar({ isSidebarCollapsed, setIsMobileMenuOpen }: TopBarProps)
 
   // Fetch profile from Firestore
   useEffect(() => {
-    if (!auth.currentUser) return;
+    if (!currentUser) return;
 
-    const userDocRef = doc(db, 'users', auth.currentUser.uid);
+    const userDocRef = doc(db, 'users', currentUser.uid);
     
     const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         setProfile({
-          displayName: data.displayName || "Dr. Nishant Kumar",
-          photoURL: data.photoURL || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=100&h=100"
+          displayName: data.displayName || defaultName,
+          photoURL: data.photoURL || defaultPhoto
+        });
+      } else {
+        setProfile({
+          displayName: defaultName,
+          photoURL: defaultPhoto
         });
       }
       setIsLoading(false);
     }, (error) => {
-      handleFirestoreError(error, OperationType.GET, `users/${auth.currentUser?.uid}`);
+      console.error("Error fetching user profile:", error);
+      setProfile({
+        displayName: defaultName,
+        photoURL: defaultPhoto
+      });
       setIsLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [currentUser, defaultName, defaultPhoto]);
 
   return (
     <header className={`fixed top-0 right-0 h-16 z-30 flex justify-between items-center px-4 md:px-8 bg-surface-container-lowest/80 backdrop-blur-lg shadow-[0px_12px_32px_rgba(25,28,29,0.06)] transition-all duration-300 w-full ${isSidebarCollapsed ? 'md:w-[calc(100%-5rem)]' : 'md:w-[calc(100%-16rem)]'}`}>

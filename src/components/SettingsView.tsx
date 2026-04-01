@@ -26,10 +26,14 @@ export function SettingsView() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const currentUser = auth.currentUser;
+  const defaultName = currentUser?.displayName || currentUser?.email?.split('@')[0] || "User";
+  const defaultPhoto = currentUser?.photoURL || "data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23E0E0E0'/%3E%3Cpath d='M50 48C59.3888 48 67 40.3888 67 31C67 21.6112 59.3888 14 50 14C40.6112 14 33 21.6112 33 31C33 40.3888 40.6112 48 50 48ZM50 55C33.3333 55 0 63.3333 0 80V100H100V80C100 63.3333 66.6667 55 50 55Z' fill='%23FFFFFF'/%3E%3C/svg%3E";
+
   const [profile, setProfile] = useState({
-    displayName: "Dr. Nishant Kumar",
-    email: "nishant.k@medcurator.com",
-    photoURL: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=200&h=200",
+    displayName: defaultName,
+    email: currentUser?.email || "doctor@medcurator.com",
+    photoURL: defaultPhoto,
     specialization: "Chief Medical Officer",
     phoneNumber: "+91 98765 43210",
     hospitalName: "City General Hospital",
@@ -46,22 +50,34 @@ export function SettingsView() {
 
   // Fetch profile from Firestore
   useEffect(() => {
-    if (!auth.currentUser) return;
+    if (!currentUser) return;
 
-    const userDocRef = doc(db, 'users', auth.currentUser.uid);
+    const userDocRef = doc(db, 'users', currentUser.uid);
     
     const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
       if (docSnap.exists()) {
-        setProfile(prev => ({ ...prev, ...docSnap.data() }));
+        const data = docSnap.data();
+        setProfile(prev => ({ 
+          ...prev, 
+          ...data,
+          displayName: data.displayName || defaultName,
+          photoURL: data.photoURL || defaultPhoto
+        }));
+      } else {
+        setProfile(prev => ({
+          ...prev,
+          displayName: defaultName,
+          photoURL: defaultPhoto
+        }));
       }
       setIsLoading(false);
     }, (error) => {
-      handleFirestoreError(error, OperationType.GET, `users/${auth.currentUser?.uid}`);
+      console.error("Error fetching user profile:", error);
       setIsLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [currentUser, defaultName, defaultPhoto]);
 
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode;

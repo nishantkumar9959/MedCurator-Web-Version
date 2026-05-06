@@ -173,7 +173,7 @@ export function LoginView() {
       </div>
       <footer className="mt-8 w-full flex flex-col items-center gap-1.5 text-center text-sm font-medium tracking-wide text-slate-500 z-10 pb-4">
         <span>&copy; 2026 MedCurator.</span>
-        <span>Engineered in India 🇮🇳 | Developed by NK, NJ & TK</span>
+        <span>Engineered in India 🇮🇳 | Developed by Nishant Kumar</span>
       </footer>
     </div>
   );

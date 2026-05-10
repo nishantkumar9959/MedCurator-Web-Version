@@ -37,7 +37,7 @@ export function AIAssistant() {
 
     // 2. Wrap the API call in a robust try...catch...finally block
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
+      const apiKey = import.meta.env.GEMINI_API_KEY;
       
       if (!apiKey || apiKey === 'undefined' || apiKey === 'MY_GEMINI_API_KEY') {
         throw new Error("Missing Gemini API Key. Please configure GEMINI_API_KEY in your environment variables.");
